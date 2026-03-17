@@ -570,26 +570,17 @@ function calculate() {
 
 function fireGoogleForm(score, resultType) {
   try {
-    const f = document.createElement('form');
-    f.method = 'POST';
-    f.action = 'https://docs.google.com/forms/d/' + GF_ID + '/formResponse';
-    f.target = 'gf';
-    const fields = [
-      [E.age,    uAge || ''],
-      [E.ig,     uIg  || ''],
-      [E.score,  score],
-      [E.result, resultType]
-    ];
-    fields.forEach(([name, val]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = val;
-      f.appendChild(input);
+    fetch('https://script.google.com/macros/s/AKfycbwe-8kGhY8oiMYymXagvIeMKKqMnwj-cUMYMRuMnU83tefbeKixavCH037wxY388N9BwA/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        age:    uAge || '',
+        ig:     uIg  || '',
+        score:  score,
+        result: resultType
+      })
     });
-    document.body.appendChild(f);
-    f.submit();
-    setTimeout(() => document.body.removeChild(f), 1000);
   } catch(e) {}
 }
 
