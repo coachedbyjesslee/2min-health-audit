@@ -295,14 +295,7 @@
 <!-- Silent Google Form iframe -->
 <iframe id="gf" name="gf" style="display:none"></iframe>
 
-<!-- Netlify form -->
-<form name="quiz-submissions" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input name="bot-field">
-  <input name="form-name" value="quiz-submissions">
-  <input name="age"><input name="instagram"><input name="score"><input name="result">
-  <input name="q1"><input name="q2"><input name="q3"><input name="q4">
-  <input name="q5"><input name="q6"><input name="q7"><input name="q8">
-</form>
+
 
 <script>
 const GF_ID = '1FAIpQLSe0z_EmeKAHmoICsZpoqYyRVbJtZr--lfPGKtc0jJikQGUFuw';
@@ -566,7 +559,6 @@ function calculate() {
 
     const r = RESULTS[bucket];
     fireGoogleForm(score, r.type);
-    fireNetlifyForm(score, r.type);
 
     document.getElementById('result-score').textContent = score;
     document.getElementById('result-type').textContent  = r.type;
@@ -593,27 +585,6 @@ function fireGoogleForm(score, resultType) {
   } catch(e) {}
 }
 
-function fireNetlifyForm(score, resultType) {
-  try {
-    const d = new URLSearchParams();
-    d.append('form-name', 'quiz-submissions');
-    d.append('age',       uAge || '');
-    d.append('instagram', uIg  || '');
-    d.append('score',     score);
-    d.append('result',    resultType);
-    Qs.forEach((q, i) => {
-      let v = '';
-      if      (q.type === 'choice' && ans[i] !== null)       v = q.opts[ans[i]].label;
-      else if (q.type === 'multi'  && Array.isArray(ans[i])) v = ans[i].map(x => q.opts[x].label).join(', ');
-      d.append('q' + (i + 1), v);
-    });
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: d.toString()
-    }).catch(() => {});
-  } catch(e) {}
-}
 </script>
 </body>
 </html>
